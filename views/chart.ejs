@@ -1,0 +1,68 @@
+<script type="text/javascript">
+
+    //Upon click Warnings/Errors Chart then load google chart
+    var warning = document.getElementById("tab_warning_chart");
+    warning.addEventListener("click",function () {
+        loadChart("warning");
+    });
+
+    var error = document.getElementById("tab_error_chart");
+    error.addEventListener("click", function () {
+        loadChart("error");
+    });
+
+    function loadChart(chart) {
+        google.charts.load('current', {'packages':['line']});
+        google.charts.setOnLoadCallback(function(){
+            drawChart(chart);
+        });
+    }
+
+    function drawChart(chartType) {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Date');
+        data.addColumn('number', '# ' + chartType + "s");
+
+        //get error data from inside div and parse it
+        var chart_data = document.getElementById( chartType + '_data');
+        var array = chart_data.innerText.split(";");
+
+        var rows = [];
+        for (var i = 0; i < array.length -1 ; i++){
+            var aux = array[i].trim().split(",");
+            rows.push([aux[0], parseInt(aux[1])]);
+        }
+
+        //adds sorted row, by date, to google chart data
+        data.addRows(rows.sort());
+        var line_color = (chartType == "warning") ? "#f0ad4e" : "#d9534f";
+
+        var options = {
+            chart: {
+                title: 'Evolution of logs',
+                curveType: 'function',
+                subtitle: 'per Day',
+            },
+            width: 1000,
+            height: 500,
+            series: {
+                // Gives each series an axis name that matches the Y-axis below.
+                0: {axis: 'Counter', color: line_color},
+            },
+            axes: {
+                // Adds labels to each axis; they don't have to match the axis names.
+                y: {
+                //Counter: {label: '# Logs'},
+                },
+                x: {
+                    0: { side:'bottom'},
+                }
+            },
+        };
+
+        var chart = new google.charts.Line(document.getElementById( chartType + '_chart_div'));
+
+        chart.draw(data, google.charts.Line.convertOptions(options));
+    }
+
+</script>

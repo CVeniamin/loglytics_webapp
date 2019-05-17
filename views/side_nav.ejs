@@ -1,0 +1,30 @@
+<div class="col-12 col-md-2 col-lg-2 sidebar-offcanvas" id="sidebar" role="navigation">
+    <h4 class="display-5 hidden-xs-down">
+        Loglytics
+    </h4>
+    <ul class="nav nav-pills flex-column">
+        <% var dashboard = ""; %>
+        <% var devices = ""; %>
+        <% var analytics = ""; %>
+        <% var settings = ""; %>
+        <% switch (page) {
+            case 'dashboard' : %>
+                <% dashboard = ' active'; %>
+                <% break;
+            case 'devices' : %>
+                <% devices = ' active'; %>
+                <% break;
+            case 'analytics' : %>
+                <% analytics = ' active'; %>
+                <% break;
+            case 'settings' : %>
+                <% settings = ' active'; %>
+                <% break;
+        } %>
+        <li class="nav-item"><a class="nav-link <%= dashboard %>" href="/dashboard">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link <%= devices %>" href="/devices">Devices</a></li>
+        <li class="nav-item"><a class="nav-link <%= analytics %>" href="/analytics">Analytics</a></li>
+        <li class="nav-item"><a class="nav-link <%= settings %>" href="/settings">Settings</a></li>
+        <li class="nav-item"><a class="nav-link btn-outline-warning" href="/logout">Logout</a></li>
+    </ul>
+</div>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+
+<head>
+    <% include header %>
+    <link href="main.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container-fluid" id="main" style="padding-top:20px;">
+        <div class="row row-offcanvas row-offcanvas-left">
+            <% include side_nav %>
+            <div class="col-12 col-sm-12 col-md-10 col-lg-10 main">
+                <% include card_carousel %>
+                <% if(devices.length > 0){%>
+                    <hr>
+                <% } %>
+                <% if(page == 'devices') {%>
+                    <% if (message){%>
+                        <div class="row">
+                            <div class="col-12 col-md-12 col-lg-12">
+                                <div class="alert alert-info" role="alert">
+                                    <strong><%= message %></strong>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } %>
+                <% include logs %>
+            </div>
+        </div>
+    </div>
+    <% include scripts %>
+    <script>
+        (function($) {
+            "use strict";
+
+            // manual carousel controls
+            $('.next').click(function(){ $('.carousel').carousel('next');return false; });
+            $('.prev').click(function(){ $('.carousel').carousel('prev');return false; });
+            $('#deviceCarousel').carousel({
+                interval: 5000
+            });
+
+        })(jQuery);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,107 @@
+/* body {
+    padding-top: 62px;
+}
+ */
+
+body,
+html {
+    height: 100%;
+    width: 100%;
+    overflow-y: hidden;
+}
+/* workaround modal-open padding issue */
+
+body.modal-open {
+    padding-right: 0 !important;
+}
+
+/*
+* Off Canvas at medium breakpoint
+* --------------------------------------------------
+*/
+
+@media screen and (max-width: 48em) {
+    .row-offcanvas {
+        position: relative;
+        -webkit-transition: all 0.25s ease-out;
+        -moz-transition: all 0.25s ease-out;
+        transition: all 0.25s ease-out;
+    }
+    .row-offcanvas-left .sidebar-offcanvas {
+        left: -25%;
+    }
+    .row-offcanvas-left.active {
+        left: 25%;
+    }
+    .sidebar-offcanvas {
+        position: absolute;
+        top: 0;
+        width: 25%;
+        height: 100%;
+    }
+}
+/*
+* Off Canvas wider at sm breakpoint
+* --------------------------------------------------
+*/
+
+@media screen and (max-width: 34em) {
+    .row-offcanvas-left .sidebar-offcanvas {
+        left: -45%;
+    }
+    .row-offcanvas-left.active {
+        left: 45%;
+    }
+    .sidebar-offcanvas {
+        width: 45%;
+    }
+}
+/* responsive nav stacked liked 3.x */
+
+@media(max-width:34em) {
+    .navbar .navbar-brand {
+        float: none;
+        display: block;
+    }
+    .navbar .navbar-nav>.nav-item {
+        float: none;
+        margin-left: .1rem;
+    }
+    .navbar .navbar-nav {
+        float: none !important;
+    }
+}
+
+#log {
+    height: 350px;
+    overflow-y: auto;
+}
+
+#log_analytics {
+    height: 350px;
+    overflow-y: auto;
+}
+
+#main {
+    padding-top: 20px;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+}
+
+#warnings,
+#errors {
+    cursor: pointer;
+}
+
+.text-nowrap {
+    white-space: nowrap;
+}
+
+.visible {
+    display: block;
+}
+
+.invisible {
+    display: none;
+}

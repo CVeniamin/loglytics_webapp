@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+
+<head>
+    <% include header %>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid" id="main">
+        <div class="row row-offcanvas row-offcanvas-left">
+            <% include side_nav %>
+                <div class="col-12 col-md-10 col-lg-10 main">
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#analytics" role="tab">
+                                        <h5 class="display-6 hidden-xs-down">
+                                            <span class="fa fa-area-chart" aria-hidden="true"></span> Analytics
+                                        </h5>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" id="tab_warning_chart" href="#warning_chart" role="tab">Warnings Chart</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" id="tab_error_chart"  href="#error_chart" role="tab">Errors Chart</a>
+                                </li>
+                                <li class="nav-item offset-md-6 offset-lg-6">
+                                    <a href="#filterModal" role="button" class="btn btn-secondary" data-toggle="modal">
+                                        <i class="fa fa-filter" aria-hidden="true"></i>
+                                        Filter Analytics
+                                    </a>
+                                </li>
+                            </ul>
+                            <!--Filter Modal-->
+                            <div id="filterModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 id="myModalLabel">Filter Analytics</h3>
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-12 col-lg-12">
+                                                    <% if(devices.length){ %>
+                                                    <form action="/analytics" method="post" class="form-inline" id="analyticsForm">
+                                                        <label class="mr-sm-2" for="device_name"> Device</label>
+                                                        <select form="analyticsForm" class="custom-select mb-2 mr-sm-2 mb-sm-0" name="device" id="device_name">
+                                                            <option value="all"> all </option>
+                                                            <% for(var i=0; i<devices.length; i++) {%>
+                                                            <option value="<%= devices[i] %>"><%= devices[i] %> </option>
+                                                            <% } %>
+                                                        </select>
+                                                        <label class="mr-sm-2" for="app_name"> App</label>
+                                                        <select form="analyticsForm" class="custom-select mb-2 mr-sm-2 mb-sm-0" name="app" id="app_name">
+                                                            <option value="all"> all </option>
+                                                            <% for(var i=0; i<apps.length; i++) {%>
+                                                                <option value="<%= apps[i] %>"><%= apps[i] %> </option>
+                                                            <% } %>
+                                                        </select>
+                                                    </form>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-secondary" form="analyticsForm" type="submit">Show</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                            <div class="col-12 col-md-12 col-lg-12">
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="analytics" role="tabpanel">
+                                        <br>
+                                        <div class="row">
+                                            <% if(warnings.length >= 0) { %>
+                                            <div class="col col-md-6 col-lg-6" id="warnings" data-toggle="collapse" data-target="#warnings_table">
+                                            <!--<div class="col col-md-6 col-lg-6" id="warnings" data-toggle="collapse" onclick="location.href='/showWarnings'">-->
+                                                <div class="card card-inverse card-warning">
+                                                    <div class="card-block bg-warning">
+                                                        <h6 class="text-uppercase">Warnings</h6>
+                                                        <h1 class="display-1"> <%= warnings.length %></h1>
+                                                        <div class="pull-right">
+                                                            <i class="fa fa-exclamation fa-2x"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% } %>
+                                            <% if(errors.length >= 0) { %>
+                                            <div class="col col-md-6 col-lg-6" id="errors" data-toggle="collapse" data-target="#errors_table">
+                                            <!--<div class="col col-md-6 col-lg-6" id="errors" onclick="location.href='/showErrors'">-->
+                                                <div class="card card-inverse card-danger">
+                                                    <div class="card-block bg-danger">
+                                                        <h6 class="text-uppercase">Errors</h6>
+                                                        <h1 class="display-1"><%= errors.length %></h1>
+                                                        <div class="pull-right">
+                                                            <i class="fa fa-exclamation-circle fa-2x"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% } %>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <% if(warnings.length > 0) {%>
+                                                <div class="col-12 col-md-12 col-lg-12 collapse in" id="warnings_table">
+                                                    <table class="table table-hover row" >
+                                                        <thead class="col-md-12 col-lg-12">
+                                                        <tr class="row">
+                                                            <th class="col-md-1 col-lg-1">Date</th>
+                                                            <th class="col-md-1 col-lg-1">Time</th>
+                                                            <th class="col-md-1 col-lg-1">Level</th>
+                                                            <th class="col-7 col-md-7 col-lg-7">Message</th>
+                                                            <th class="col-2 col-md-2 col-lg-2">
+                                                                <button type="button" class="btn btn-warning">Warnings</button>
+                                                            </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody class="col-md-12 col-lg-12"  style="font-size:12px; overflow: auto; max-height: 250px;">
+                                                        <% for(var i = warnings.length - 1; i >= 0; i--) {%>
+                                                            <tr class="row">
+                                                                <th class="col-md-1 col-lg-1 date"> <%= warnings[i].data.date %></th>
+                                                                <th class="col-md-1 col-lg-1"><%= warnings[i].data.time %></th>
+                                                                <th class="col-md-1 col-lg-1"><%= warnings[i].data.level %></th>
+                                                                <th class="col-md-9 col-lg-9 message"><%- warnings[i].data.message %></th>
+                                                            </tr>
+                                                        <% } %>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            <% } %>
+                                            <% if(errors.length > 0) {%>
+                                                <div class="col-12 col-md-12 col-lg-12 collapse" id="errors_table">
+                                                    <table class="table table-hover row">
+                                                        <thead class="col-md-12 col-lg-12">
+                                                        <tr class="row">
+                                                            <th class="col-md-1 col-lg-1">Date</th>
+                                                            <th class="col-md-1 col-lg-1">Time</th>
+                                                            <th class="col-md-1 col-lg-1">Level</th>
+                                                            <th class="col-7 col-md-7 col-lg-7">Message</th>
+                                                            <th class="col-2 col-md-2 col-lg-2">
+                                                                <button type="button" class="btn btn-danger">Errors</button>
+                                                            </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody class="col-md-12 col-lg-12" style="font-size:12px; overflow: auto; max-height: 250px;">
+                                                        <% for(var i = errors.length - 1; i >= 0; i--) {%>
+                                                            <tr class="row">
+                                                                <th class="col-md-1 col-lg-1 date"> <%= errors[i].data.date %></th>
+                                                                <th class="col-md-1 col-lg-1"><%= errors[i].data.time %></th>
+                                                                <th class="col-md-1 col-lg-1"><%= errors[i].data.level %></th>
+                                                                <th class="col-md-9 col-lg-9 message"><%- errors[i].data.message %></th>
+                                                            </tr>
+                                                        <% } %>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="warning_chart" role="tabpanel">
+                                        <div class="row">
+                                            <div class="col-12 col-md-12 col-lg-12">
+                                                <div id="warning_chart_div"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="error_chart" role="tabpanel">
+                                        <div class="row">
+                                            <div class="col-12 col-md-12 col-lg-12">
+                                                <div id="error_chart_div"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div id="error_data" style="display: none;">
+                        <% for(var i = 0 ; i <= error_rows.length - 1; i++) {%>
+                            <%= error_rows[i][0]%>,<%= error_rows[i][1] %>;
+                        <% } %>
+                    </div>
+                    <div id="warning_data" style="display: none;">
+                        <% for(var i = 0 ; i <= warning_rows.length - 1; i++) {%>
+                            <%= warning_rows[i][0]%>,<%= warning_rows[i][1] %>;
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% include scripts %>
+    <% include chart %>
+    <!--<script src="./analytics.js"></script>-->
+</body>
+</html>

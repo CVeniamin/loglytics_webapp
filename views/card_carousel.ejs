@@ -1,0 +1,70 @@
+<section>
+  <div class="row">
+      <div class="col-12 col-md-10 col-lg-10">
+          <h4 class="display-5">
+              <span class="fa fa-tablet" area-hidden="true"></span> Devices
+          </h4>
+      </div>
+      <% if(devices.length > 3) { %>
+        <div class="col-12 col-md-2 col-lg-2">
+          <a class="btn btn-secondary-outline prev" href="" title="go back"><i class="fa fa-lg fa-chevron-left"></i></a>
+          <a class="btn btn-secondary-outline next" href="" title="more"><i class="fa fa-lg fa-chevron-right"></i></a>
+        </div>
+      <%}%>
+  </div>
+  <hr>
+</section>
+
+<section class="carousel slide" data-ride="carousel" id="deviceCarousel">
+    <div class="container pt-0 mx-auto">
+        <div class="row m-t-0">
+            <div class="col-sm-12 col-12 col-md-12 col-lg-12">
+                <div class="carousel-inner">
+                    <% if(devices.length > 0) { %>
+                        <% for(var i=0; i < devices.length; i++) {%>
+                            <% if(i % 3 == 0 ) { %>
+                                <% if(i != 0 ) { %>
+                                    </div>
+                                    <div class="card-deck carousel-item ">
+                                <% } else { %>
+                                    <div class="card-deck carousel-item active">
+                                <% } %>
+                            <% } %>
+                            <div class="card ml-6 mr-6" style="height: 15rem;">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item justify-content-between btn-secondary" >
+                                        Remove
+                                        <a href='/removedevice/<%= devices[i].info.id %>/<%= devices[i].info.app %>'>
+                                            <span><i class="fa fa-times " aria-hidden="true" ></i></span>
+                                        </a>
+                                    </li>
+                                    <li class="list-group-item justify-content-between">
+                                        ID
+                                        <span class="badge badge-default" ><%= devices[i].info.id %></span>
+                                    </li>
+                                    <li class="list-group-item justify-content-between">
+                                        Brand
+                                        <span class="badge badge-default"><%= devices[i].info.brand %> <%= devices[i].info.product %></span>
+                                    </li>
+                                    <li class="list-group-item justify-content-between ">
+                                        App
+                                        <span class="badge badge-default"><%= devices[i].info.app %> </span>
+                                    </li>
+                                    <li class="list-group-item justify-content-between">
+                                        SDK Version
+                                        <span class="badge badge-default badge-pill"><%= devices[i].info.sdk %></span>
+                                    </li>
+                                </ul>
+                                <div class="card-block text-center">
+                                    <a class ="card-link btn btn-outline-primary" href='/showlog/<%= devices[i].info.id %>/<%= devices[i].info.app %>'>Show Log</a>
+                                    <a class ="card-link btn btn-outline-danger" href='/clearlog/<%= devices[i].info.id %>/<%= devices[i].info.app %>'>Clear Log</a>
+                                </div>
+                            </div>
+                          <% } %>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

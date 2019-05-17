@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include header %>
+</head>
+
+<body>
+<div class="container-fluid" id="main">
+    <div class="row row-offcanvas row-offcanvas-left" id="after_main">
+        <% include side_nav %>
+        <div class="col-12 col-md-9 col-lg-10 main">
+            <div class="row align-items-center">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <h4 class="display-5 hidden-xs-down">
+                        <span class="fa fa-cog" aria-hidden="true"></span> Settings
+                    </h4>
+                </div>
+            </div>
+            <hr>
+            <div class="">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-6 col-md-6 col-lg-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Library Token</span>
+                                <% if (user.github.token || user.google.token) { %>
+                                    <span id="token_id" class="input-group-addon"><%- user._id %></span>
+                                <% } else { %>
+                                    <span id="token_id" class="input-group-addon"><%- token %></span>
+                                <% } %>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-secondary" id="copyButton" data-container="body" data-toggle="popover" data-placement="right" data-content="Copied!"><i class="fa fa-clipboard" aria-hidden="true"></i></button>
+                                </span>
+                            </div>
+                            <br>
+                            <% var type %>
+                            <% var email %>
+                            <% if (user.local.email) { %>
+                                <% type = 'local'%>
+                                <% email = user.local.email%>
+                                <div class="input-group">
+                                    <span class="input-group-addon">Email</span>
+                                    <span class="input-group-addon"><%= user.local.email %></span>
+                                </div>
+                                <br>
+                            <%}%>
+                            <% if (user.github.token) { %>
+                                <% type = 'github'%>
+                                <% if (user.github.email) { %>
+                                    <% email = user.github.email%>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Email</span>
+                                        <span class="input-group-addon"><%= user.github.email %></span>
+                                    </div>
+                                    <br>
+                                <% } %>
+                            <% } %>
+                            <% if (user.google.email) { %>
+                                <% type = 'google'%>
+                                <% email = user.google.email%>
+                                <div class="input-group">
+                                    <span class="input-group-addon">Email</span>
+                                    <span class="input-group-addon"><%= user.google.email %></span>
+                                </div>
+                                <br>
+                            <% } %>
+                            <div class="input-group">
+                                <span class="input-group-addon">Name</span>
+                                <span class="input-group-addon"><%= user.name %></span>
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <a href="#deleteModal" role="button" class="btn btn-danger" data-toggle="modal">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                    Delete Account
+                                </a>
+                            </div>
+                            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccountLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Deleting account</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            By deleting your account, you will be deleting also all logs and related data.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <a href="/unlink/<%= type%>" class="btn btn-danger">Delete Account</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-md-6 col-lg-6">
+                            <%if(user._id == token){%>
+                                <form class="form-inline" action="/settings" method="post">
+                                    <div class="form-group mr-2">
+                                        <label for="member_email" class="sr-only">Email</label>
+                                        <input type="email" class="form-control" name="email" placeholder="Email">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                        Add Member
+                                    </button>
+                                </form>
+                                <br>
+                                <% if(message.length > 0){%>
+                                <div class="alert alert-info" role="alert">
+                                    <h5 class="alert-heading"><%- message[0]%></h5>
+                                    <p class="mb-1"><%- message[1]%></p>
+                                    <p class="mb-0" style="word-wrap:break-word;"><%- message[2]%></p>
+                                </div>
+                                <br>
+                                <%}%>
+                            <% } %>
+                            <% if(colleagues.length >= 2) { %>
+                                <!--Show only if there are more than 2 colleagues-->
+                                <label>Team Members</label>
+                                <table class="table">
+                                    <thead class="thead-default">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Email</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <% for(var i = 0; i < colleagues.length; i++){ %>
+                                        <tr>
+                                            <th> <%- i + 1 %> </th>
+                                            <td> <%- colleagues[i] %></td>
+                                            <!--Appears only for admin and show remove button for every other member-->
+                                            <%if(user._id == token && i > 0){%>
+                                                <td><a class="btn btn-danger" href="/removeMember?member=<%- colleagues[i]%>">remove</a></td>
+                                            <% } %>
+                                        </tr>
+                                    <% } %>
+                                <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--/row-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% include scripts%>
+<script src="./copyToClipboard.js"></script>
+<script>
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
+</script>
+</body>
+
+</html>

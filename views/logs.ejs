@@ -1,0 +1,59 @@
+<% if(logs.length == 0 && page != 'devices'){ %>
+    <div class="alert alert-info" id="alert" role="alert">
+        <strong>You don't have any logs at the moment!</strong>
+        <p>After you use the library you should be able to view logs.</p>
+    </div>
+<% } %>
+
+<table class="table table-hover row" id="log_table">
+<% if(logs.length >= 0) {%>
+        <!---Set log table height for each page-->
+        <% switch (page) {
+            case 'dashboard' : %>
+                <% var height = "550px;"%>
+                <% break;
+            default : %>
+                <% var height = "250px;"%>
+                <% break;
+        } %>
+        <% if(logs.length > 0) {%>
+            <thead class="col-md-12 col-lg-12">
+            <tr class="row">
+                <th class="col-md-1 col-lg-1">Date</th>
+                <th class="col-md-1 col-lg-1">Time</th>
+                <th class="col-md-1 col-lg-1">Level</th>
+                <% if(page != 'dashboard'){ %>
+                    <th class="col-9 col-lg-9">Message</th>
+                <% } else { %>
+                    <th class="col-7 col-lg-7">Message</th>
+                    <th class="col-2 col-lg-2">
+                        <label>
+                            <input type="checkbox" id="scroll_log" checked>
+                            Scroll on Output
+                        </label>
+                    </th>
+                <% }%>
+            </tr>
+            </thead>
+        <% } %>
+        <% if(logs.length >= 0) {%>
+            <tbody class="col-md-12 col-lg-12" id="tbody_log" style="font-size: 12px; overflow: auto; max-height: <%= height %>">
+        <% } %>
+        <% if(logs.length > 0) {%>
+            <% for(var i = logs.length - 1; i >= 0; i--) {%>
+                <tr class="row">
+                    <th class="col-md-1 col-lg-1 date"> <%= logs[i].data.date %></th>
+                    <th class="col-md-1 col-lg-1"><%= logs[i].data.time %></th>
+                    <th class="col-md-1 col-lg-1"><%= logs[i].data.level %></th>
+                    <th class="col-md-9 col-lg-9 message"><%- logs[i].data.message %></th>
+                </tr>
+            <% } %>
+        <% } %>
+        <% if(logs.length >= 0) {%>
+            </tbody>
+        <% } %>
+    <% } %>
+</table>
+
+
+
